@@ -1,5 +1,6 @@
 package com.security_service.security;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -37,6 +38,7 @@ public class SecurityConfiguration {
         return configuration.getAuthenticationManager();
     }
 
+    @Bean
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
     }
