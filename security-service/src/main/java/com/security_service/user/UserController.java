@@ -4,6 +4,7 @@ import com.security_service.security.UserLoginDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -26,12 +27,14 @@ public class UserController {
     }
 
     @PutMapping("{id}")
+    @PreAuthorize("#id == authentication.principal.id")
     public ResponseEntity<UserResponseDTO> update(@PathVariable Long id, @RequestBody UserRequestDTO dto){
         UserResponseDTO response = service.updateUser(id,dto);
         return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("{id}")
+    @PreAuthorize("#id == authentication.principal.id")
     public ResponseEntity<Void> delete(@PathVariable Long id){
         service.deleteUser(id);
         return ResponseEntity.noContent().build();
