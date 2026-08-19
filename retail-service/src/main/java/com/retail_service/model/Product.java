@@ -1,10 +1,7 @@
-package com.retail_service.product;
+package com.retail_service.model;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.math.BigDecimal;
 
@@ -12,8 +9,7 @@ import java.math.BigDecimal;
 @Entity(name = "product")
 @Getter
 @Setter
-@RequiredArgsConstructor
-@NoArgsConstructor
+@AllArgsConstructor
 public class Product {
 
     @Id
@@ -21,9 +17,7 @@ public class Product {
     private long id;
     private String name;
     private String description;
-    // to simplify i`ll not use this right now. private String barCode;
     private BigDecimal price;
-
-
+    private Boolean active;
 
 }
