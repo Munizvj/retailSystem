@@ -9,10 +9,9 @@ import lombok.RequiredArgsConstructor;
 import org.apache.kafka.common.errors.ResourceNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -22,16 +21,24 @@ public class ProductService {
     private final ProductMapper mapper;
     private final static Logger log = LoggerFactory.getLogger(ProductService.class);
 
-    public List<ProductResponseDTO> getAllProduct(){
-        return repository.findAll()
-                .stream()
-                .map(ProductResponseDTO::new)
-                .collect(Collectors.toList());
+    public Page<ProductResponseDTO> getAllProduct(Pageable pageable){
+        Page<Product> products = repository.findAll(pageable);
+
+        return products.map(product -> new ProductResponseDTO(product));
     }
 
     public ProductResponseDTO findProductById(Long id){
         Product product = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Product Not Found"));
+
+        ProductResponseDTO response = mapper.toDTO(product);
+
+        return response;
+    }
+
+    public ProductResponseDTO findProductByName(String name){
+        Product product = repository.findByName(name)
+                .orElseThrow(() -> new ResourceNotFoundException("Product not Found"));
 
         ProductResponseDTO response = mapper.toDTO(product);
 
@@ -56,12 +63,12 @@ public class ProductService {
         return mapper.toDTO(updatedProduct);
     }
 
-    public void deleteUser(Long id){
+    public void deleteProduct(Long id){
         Product product = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Product Not Found"));
 
         repository.delete(product);
-        log.info("Product deleted successfully");
+        log.info("Product with id: {}, deleted successfully", product.getId());
     }
 
 }
