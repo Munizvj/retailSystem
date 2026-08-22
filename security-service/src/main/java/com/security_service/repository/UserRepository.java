@@ -1,7 +1,7 @@
-package com.security_service.user;
+package com.security_service.repository;
 
+import com.security_service.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 
 import java.util.Optional;
 

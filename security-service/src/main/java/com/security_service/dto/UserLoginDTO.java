@@ -1,4 +1,4 @@
-package com.security_service.security;
+package com.security_service.dto;
 
 import lombok.Data;
 

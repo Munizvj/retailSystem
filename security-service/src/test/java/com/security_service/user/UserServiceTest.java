@@ -1,7 +1,13 @@
 package com.security_service.user;
 
+import com.security_service.dto.UserRequestDTO;
+import com.security_service.dto.UserResponseDTO;
+import com.security_service.mapper.UserMapper;
+import com.security_service.model.User;
+import com.security_service.repository.UserRepository;
 import com.security_service.security.SecurityService;
-import com.security_service.security.UserLoginDTO;
+import com.security_service.dto.UserLoginDTO;
+import com.security_service.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

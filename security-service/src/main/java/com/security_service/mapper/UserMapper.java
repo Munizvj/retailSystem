@@ -1,5 +1,8 @@
-package com.security_service.user;
+package com.security_service.mapper;
 
+import com.security_service.model.User;
+import com.security_service.dto.UserRequestDTO;
+import com.security_service.dto.UserResponseDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
 

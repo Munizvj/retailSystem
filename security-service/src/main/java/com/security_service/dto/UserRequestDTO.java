@@ -1,4 +1,4 @@
-package com.security_service.user;
+package com.security_service.dto;
 
 import lombok.Data;
 
@@ -7,5 +7,4 @@ public class UserRequestDTO {
     private String name;
     private String login;
     private String password;
-    private UserRole userRole;
 }

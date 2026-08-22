@@ -1,7 +1,12 @@
-package com.security_service.user;
+package com.security_service.service;
 
+import com.security_service.dto.UserRequestDTO;
+import com.security_service.dto.UserResponseDTO;
+import com.security_service.mapper.UserMapper;
+import com.security_service.model.User;
+import com.security_service.repository.UserRepository;
 import com.security_service.security.SecurityService;
-import com.security_service.security.UserLoginDTO;
+import com.security_service.dto.UserLoginDTO;
 import jakarta.ws.rs.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;

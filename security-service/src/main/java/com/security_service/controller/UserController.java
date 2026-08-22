@@ -1,6 +1,9 @@
-package com.security_service.user;
+package com.security_service.controller;
 
-import com.security_service.security.UserLoginDTO;
+import com.security_service.dto.UserLoginDTO;
+import com.security_service.dto.UserRequestDTO;
+import com.security_service.dto.UserResponseDTO;
+import com.security_service.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
