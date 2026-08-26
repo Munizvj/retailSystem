@@ -10,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/user")
 @RequiredArgsConstructor
@@ -23,21 +25,27 @@ public class UserController {
         return ResponseEntity.ok(token);
     }
 
+    @GetMapping
+    @PreAuthorize("hasAuthority('GET_USER')")
+    public ResponseEntity<List<UserResponseDTO>> getAllUsers() {
+        return ResponseEntity.ok(service.getAllUsers());
+    }
+
     @PostMapping("/register")
     public ResponseEntity<UserResponseDTO> register(@RequestBody UserRequestDTO dto){
         UserResponseDTO response = service.registerUser(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @PutMapping("{id}")
-    @PreAuthorize("#id == authentication.principal.id")
+    @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('UPDATE_USER')")
     public ResponseEntity<UserResponseDTO> update(@PathVariable Long id, @RequestBody UserRequestDTO dto){
         UserResponseDTO response = service.updateUser(id,dto);
         return ResponseEntity.ok(response);
     }
 
-    @DeleteMapping("{id}")
-    @PreAuthorize("#id == authentication.principal.id")
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('DELETE_USER')")
     public ResponseEntity<Void> delete(@PathVariable Long id){
         service.deleteUser(id);
         return ResponseEntity.noContent().build();
