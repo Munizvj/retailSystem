@@ -1,15 +1,17 @@
-package com.retail_service;
+package com.security_service;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 
 @SpringBootApplication
 @EnableDiscoveryClient
-public class RetailServiceApplication {
+@EnableFeignClients
+public class SecurityServiceApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(RetailServiceApplication.class, args);
+		SpringApplication.run(SecurityServiceApplication.class, args);
 	}
 
 }
