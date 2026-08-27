@@ -23,17 +23,18 @@ public class UserDetailsImpl implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Set<GrantedAuthority> authorities = new HashSet<>();
 
-        if (user.getPosition() != null){
-            authorities.add(new SimpleGrantedAuthority("ROLE_" + user.getPosition().getRole()));
-
+        if (user.getPosition() != null && user.getPosition().getPermissions() != null) {
             user.getPosition().getPermissions().forEach(permission ->
                     authorities.add(new SimpleGrantedAuthority(permission.getName()))
             );
+
+            authorities.add(new SimpleGrantedAuthority("ROLE_" + user.getPosition().getRole()));
         }
 
-        if (user.getExtraPermission() != null){
+        if (user.getExtraPermission() != null) {
             user.getExtraPermission().forEach(permission ->
-                    authorities.add(new SimpleGrantedAuthority(permission.getName())));
+                    authorities.add(new SimpleGrantedAuthority(permission.getName()))
+            );
         }
 
         return authorities;

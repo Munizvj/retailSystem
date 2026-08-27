@@ -7,21 +7,25 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-@RestController("/product")
+@RestController
+@RequestMapping("/product")
 public class ProductController {
 
     private ProductService service;
 
-    @GetMapping("/products")
-    public ResponseEntity<org.springframework.data.domain.Page<ProductResponseDTO>> getAllProduct(Pageable pageable){
+    @GetMapping
+    @PreAuthorize("hasAuthority('GET_PRODUCTS')")
+    public ResponseEntity<Page<ProductResponseDTO>> getAllProduct(Pageable pageable){
         Page<ProductResponseDTO> productsPage = service.getAllProduct(pageable);
 
         return ResponseEntity.ok(productsPage);
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('GET_PRODUCTS')")
     public ResponseEntity<ProductResponseDTO> findProductById(@PathVariable Long id){
 
         ProductResponseDTO product = service.findProductById(id);
@@ -30,7 +34,8 @@ public class ProductController {
 
     }
 
-    @GetMapping("/{name}")
+    @GetMapping("/search")
+    @PreAuthorize("hasAuthority('GET_PRODUCTS')")
     public ResponseEntity<ProductResponseDTO> findProductByName(@RequestParam String name){
 
         ProductResponseDTO product = service.findProductByName(name);
@@ -40,6 +45,7 @@ public class ProductController {
     }
 
     @PostMapping("/register")
+    @PreAuthorize("hasAuthority('REGISTER_PRODUCT')")
     public ResponseEntity<ProductResponseDTO> registerProduct(ProductRequestDTO request){
 
         ProductResponseDTO response = service.registerProduct(request);
@@ -48,6 +54,7 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('UPDATE_PRODUCT')")
     public ResponseEntity<ProductResponseDTO> updateProduct(@PathVariable Long id, @RequestBody ProductRequestDTO request){
 
         ProductResponseDTO response = service.updateProduct(id,request);
@@ -55,7 +62,8 @@ public class ProductController {
         return ResponseEntity.ok(response);
     }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('DELETE_PRODUCT')")
     public ResponseEntity<Void> deleteProduct(@PathVariable Long id){
         service.deleteProduct(id);
 

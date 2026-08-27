@@ -34,6 +34,7 @@ public class SecurityConfig {
                         .requestMatchers("/error").permitAll()
                         .requestMatchers(HttpMethod.PUT, "/user/{id}").permitAll()
                         .requestMatchers(HttpMethod.DELETE, "/user/{id}").permitAll()
+                        .requestMatchers( "/product/**").authenticated()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)

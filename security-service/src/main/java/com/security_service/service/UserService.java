@@ -12,6 +12,7 @@ import com.security_service.repository.PositionRepository;
 import com.security_service.repository.UserRepository;
 import com.security_service.security.SecurityService;
 import com.security_service.dto.UserLoginDTO;
+import com.security_service.security.UserDetailsImpl;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.ws.rs.NotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -52,7 +53,9 @@ public class UserService {
         }
 
         log.info("User {} succesfully authenticated!", user.getLogin());
-        return securityService.generateToken(user);
+
+        UserDetailsImpl userDetails = new UserDetailsImpl(user);
+        return securityService.generateToken(user, userDetails);
     }
 
     public List<UserResponseDTO> getAllUsers(){
@@ -93,7 +96,7 @@ public class UserService {
     @Transactional
     public UserResponseDTO updateUser(Long id, UserRequestDTO dto){
         User existingUser = userRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("User not found"));
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
 
         mapper.updateEntity(dto, existingUser);
 
@@ -123,5 +126,9 @@ public class UserService {
 
     @Transactional
     public void deleteUser(Long id){
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("User Not Found"));
+
+        userRepository.delete(user);
     }
 }
