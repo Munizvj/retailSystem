@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -23,6 +24,7 @@ public class ProductService {
 
     public Page<ProductResponseDTO> getAllProduct(Pageable pageable){
         Page<Product> products = repository.findAll(pageable);
+        System.out.println("Total de elementos encontrados: " + products.getTotalElements());
 
         return products.map(product -> new ProductResponseDTO(product));
     }
@@ -45,6 +47,7 @@ public class ProductService {
         return response;
     }
 
+    @Transactional
     public ProductResponseDTO registerProduct(ProductRequestDTO request){
         Product product = mapper.toEntity(request);
 
@@ -52,6 +55,7 @@ public class ProductService {
         return mapper.toDTO(repository.save(product));
     }
 
+    @Transactional
     public ProductResponseDTO updateProduct(Long id, ProductRequestDTO request){
         Product existingProduct = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Product Not Found"));
@@ -63,6 +67,7 @@ public class ProductService {
         return mapper.toDTO(updatedProduct);
     }
 
+    @Transactional
     public void deleteProduct(Long id){
         Product product = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Product Not Found"));

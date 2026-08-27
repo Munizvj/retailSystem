@@ -3,8 +3,10 @@ package com.retail_service.controller;
 import com.retail_service.dto.ProductRequestDTO;
 import com.retail_service.dto.ProductResponseDTO;
 import com.retail_service.service.ProductService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -12,16 +14,17 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/product")
+@RequiredArgsConstructor
 public class ProductController {
 
-    private ProductService service;
+    private final ProductService service;
 
     @GetMapping
     @PreAuthorize("hasAuthority('GET_PRODUCTS')")
-    public ResponseEntity<Page<ProductResponseDTO>> getAllProduct(Pageable pageable){
-        Page<ProductResponseDTO> productsPage = service.getAllProduct(pageable);
-
-        return ResponseEntity.ok(productsPage);
+    public ResponseEntity<Page<ProductResponseDTO>> getAllProducts(@PageableDefault(page = 0, size = 10) Pageable pageable) {
+        System.out.println("CHEGOU NO CONTROLLER");
+        Page<ProductResponseDTO> page = service.getAllProduct(pageable);
+        return ResponseEntity.ok(page);
     }
 
     @GetMapping("/{id}")
@@ -46,7 +49,7 @@ public class ProductController {
 
     @PostMapping("/register")
     @PreAuthorize("hasAuthority('REGISTER_PRODUCT')")
-    public ResponseEntity<ProductResponseDTO> registerProduct(ProductRequestDTO request){
+    public ResponseEntity<ProductResponseDTO> registerProduct(@RequestBody ProductRequestDTO request){
 
         ProductResponseDTO response = service.registerProduct(request);
 
