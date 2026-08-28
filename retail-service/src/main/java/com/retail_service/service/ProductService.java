@@ -1,7 +1,7 @@
 package com.retail_service.service;
 
-import com.retail_service.dto.ProductRequestDTO;
-import com.retail_service.dto.ProductResponseDTO;
+import com.retail_service.dto.productDTO.ProductRequestDTO;
+import com.retail_service.dto.productDTO.ProductResponseDTO;
 import com.retail_service.mapper.ProductMapper;
 import com.retail_service.model.Product;
 import com.retail_service.repository.ProductRepository;
@@ -24,8 +24,6 @@ public class ProductService {
 
     public Page<ProductResponseDTO> getAllProduct(Pageable pageable){
         Page<Product> products = repository.findAll(pageable);
-        System.out.println("Total de elementos encontrados: " + products.getTotalElements());
-
         return products.map(product -> new ProductResponseDTO(product));
     }
 
@@ -73,7 +71,7 @@ public class ProductService {
                 .orElseThrow(() -> new ResourceNotFoundException("Product Not Found"));
 
         repository.delete(product);
-        log.info("Product with id: {}, deleted successfully", product.getId());
+        log.info("Product with id: {}, deleted successfully", product.getProductId());
     }
 
 }

@@ -7,6 +7,7 @@ import com.security_service.model.User;
 import com.security_service.repository.UserRepository;
 import com.security_service.security.SecurityService;
 import com.security_service.dto.UserLoginDTO;
+import com.security_service.security.UserDetailsImpl;
 import com.security_service.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -54,7 +55,7 @@ class UserServiceTest {
         when(passwordEncoder.matches("123456", "encrypted-password"))
                 .thenReturn(true);
 
-        when(securityService.generateToken(user)).thenReturn("tokenJWT");
+        when(securityService.generateToken(user, any(UserDetailsImpl.class))).thenReturn("tokenJWT");
 
         String result = userService.userLogin(loginDTO);
 

@@ -1,4 +1,4 @@
-package com.retail_service.dto;
+package com.retail_service.dto.productDTO;
 
 import com.retail_service.model.Product;
 import lombok.AllArgsConstructor;
@@ -19,7 +19,7 @@ public class ProductResponseDTO {
     private Boolean active;
 
     public ProductResponseDTO(Product product) {
-        this.id = product.getId();
+        this.id = product.getProductId();
         this.name = product.getName();
         this.description = product.getDescription();
         this.price = product.getPrice();

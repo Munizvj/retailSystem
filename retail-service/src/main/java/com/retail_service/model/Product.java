@@ -15,10 +15,14 @@ public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private long productId;
+
+    @Column(nullable = false)
     private String name;
     private String description;
     private BigDecimal price;
     private Boolean active;
+    @OneToOne(mappedBy = "product", cascade = CascadeType.ALL)
+    private Stock stock;
 
 }
