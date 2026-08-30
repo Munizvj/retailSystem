@@ -1,5 +1,6 @@
 package com.security_service.controller;
 
+import com.security_service.dto.PermissionRequest;
 import com.security_service.dto.UserLoginDTO;
 import com.security_service.dto.UserRequestDTO;
 import com.security_service.dto.UserResponseDTO;
@@ -20,7 +21,7 @@ public class UserController {
     private final UserService service;
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody UserLoginDTO dto){
+    public ResponseEntity<String> login(@RequestBody UserLoginDTO dto) {
         String token = service.userLogin(dto);
         return ResponseEntity.ok(token);
     }
@@ -32,25 +33,39 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<UserResponseDTO> register(@RequestBody UserRequestDTO dto){
+    public ResponseEntity<UserResponseDTO> register(@RequestBody UserRequestDTO dto) {
         UserResponseDTO response = service.registerUser(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAuthority('UPDATE_USER')")
-    public ResponseEntity<UserResponseDTO> update(@PathVariable Long id, @RequestBody UserRequestDTO dto){
-        UserResponseDTO response = service.updateUser(id,dto);
+    public ResponseEntity<UserResponseDTO> update(@PathVariable Long id, @RequestBody UserRequestDTO dto) {
+        UserResponseDTO response = service.updateUser(id, dto);
         return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('DELETE_USER')")
-    public ResponseEntity<Void> delete(@PathVariable Long id){
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
         service.deleteUser(id);
         return ResponseEntity.noContent().build();
     }
 
+
+    @PutMapping("/permission")
+    @PreAuthorize("hasAnyAuthority('UPDATE_USER')")
+    public ResponseEntity<Void> addPermission(@RequestBody PermissionRequest permissionRequest) {
+        service.addPermission(permissionRequest);
+        return ResponseEntity.noContent().build();
+    }
+
+
+    @GetMapping("/verify-can-pay")
+    @PreAuthorize("hasAnyAuthority('PAY_NEW_ORDER')")
+    public ResponseEntity<Boolean> canPay(){
+        return ResponseEntity.ok(Boolean.TRUE);
+    }
 
 
 }

@@ -3,7 +3,8 @@ package com.security_service.user;
 import com.security_service.dto.UserRequestDTO;
 import com.security_service.dto.UserResponseDTO;
 import com.security_service.mapper.UserMapper;
-import com.security_service.model.User;
+import com.security_service.model.User.User;
+import com.security_service.model.User.UserDataService;
 import com.security_service.repository.UserRepository;
 import com.security_service.security.SecurityService;
 import com.security_service.dto.UserLoginDTO;
@@ -27,7 +28,7 @@ import static org.mockito.Mockito.*;
 class UserServiceTest {
 
     @Mock
-    private UserRepository repository;
+    private UserDataService repository;
     @Mock
     private UserMapper mapper;
     @Mock
@@ -40,7 +41,7 @@ class UserServiceTest {
     //Test most legible i could do
 
     @Test
-    void shouldLoginSuccessfully(){
+    void shouldLoginSuccessfully() {
         UserLoginDTO loginDTO = new UserLoginDTO();
         loginDTO.setLogin("core");
         loginDTO.setPassword("123456");
@@ -50,7 +51,7 @@ class UserServiceTest {
         user.setPassword("encrypted-password");
 
 
-        when(repository.findByLogin("core")).thenReturn(Optional.of(user));
+        when(repository.doLogin("core")).thenReturn(user);
 
         when(passwordEncoder.matches("123456", "encrypted-password"))
                 .thenReturn(true);
@@ -59,29 +60,29 @@ class UserServiceTest {
 
         String result = userService.userLogin(loginDTO);
 
-        assertEquals("tokenJWT",result);
+        assertEquals("tokenJWT", result);
     }
 
     @Test
-    void shouldThrowExceptionWhenUserDoesNotExist(){
+    void shouldThrowExceptionWhenUserDoesNotExist() {
         UserLoginDTO loginDTO = new UserLoginDTO();
         loginDTO.setLogin("core");
         loginDTO.setPassword("123456");
 
-        when(repository.findByLogin("core"))
-                .thenReturn(Optional.empty());
+        when(repository.doLogin("core"))
+                .thenThrow(BadCredentialsException.class);
 
         assertThrows(BadCredentialsException.class,
                 () -> userService.userLogin(loginDTO));
 
-        verify(repository).findByLogin("core");
+        verify(repository).doLogin("core");
         verifyNoInteractions(passwordEncoder);
         verifyNoInteractions(securityService);
 
     }
 
     @Test
-    void shouldThrowExceptionWhenPasswordWrong(){
+    void shouldThrowExceptionWhenPasswordWrong() {
         UserLoginDTO loginDTO = new UserLoginDTO();
         loginDTO.setLogin("core");
         loginDTO.setPassword("123456");
@@ -90,20 +91,20 @@ class UserServiceTest {
         user.setLogin("core");
         user.setPassword("encrypted-password");
 
-        when(repository.findByLogin("core")).thenReturn(Optional.of(user));
+        when(repository.doLogin("core")).thenReturn(user);
 
         when(passwordEncoder.matches("123456", "encrypted-password"))
                 .thenReturn(false);
 
         assertThrows(BadCredentialsException.class
-        ,() -> userService.userLogin(loginDTO));
+                , () -> userService.userLogin(loginDTO));
 
-        verify(repository).findByLogin("core");
+        verify(repository).doLogin("core");
         verify(passwordEncoder).matches("123456", "encrypted-password");
     }
 
     @Test
-    void shouldRegisterSuccessfully(){
+    void shouldRegisterSuccessfully() {
         UserRequestDTO request = new UserRequestDTO();
         request.setLogin("core");
         request.setPassword("123456");
@@ -122,7 +123,7 @@ class UserServiceTest {
     }
 
     @Test
-    void shouldUpdateSuccessfully(){
+    void shouldUpdateSuccessfully() {
         Long userId = 1L;
         UserRequestDTO request = new UserRequestDTO();
         request.setLogin("core");
@@ -133,7 +134,7 @@ class UserServiceTest {
         expectedResponse.setLogin("romeu");
         expectedResponse.setId(userId);
 
-        when(repository.findById(userId)).thenReturn(Optional.of(user));
+        when(repository.findById(userId)).thenReturn(user);
         when(passwordEncoder.encode("123456")).thenReturn("encrypted-password");
         when(repository.save(any(User.class))).thenReturn(user);
         when(mapper.toDTO(user)).thenReturn(expectedResponse);
@@ -144,14 +145,13 @@ class UserServiceTest {
     }
 
     @Test
-    void shouldDeleteSuccessfully(){
+    void shouldDeleteSuccessfully() {
         Long id = 1L;
         User user = new User();
 
-        when(repository.findById(id)).thenReturn(Optional.of(user));
         userService.deleteUser(id);
 
-        verify(repository).delete(user);
+        verify(repository).deleteById(user.getId());
     }
 
 
