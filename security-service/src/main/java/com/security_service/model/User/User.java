@@ -1,9 +1,9 @@
-package com.security_service.model;
+package com.security_service.model.User;
 
+import com.security_service.model.permission.Permission;
+import com.security_service.model.position.Position;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -12,7 +12,9 @@ import java.util.Set;
 @Entity(name = "user")
 @Getter
 @Setter
-@RequiredArgsConstructor
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class User {
 
     @Id

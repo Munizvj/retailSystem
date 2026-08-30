@@ -1,5 +1,6 @@
-package com.security_service.model;
+package com.security_service.model.position;
 
+import com.security_service.model.permission.Permission;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -22,7 +23,7 @@ public class Position {
     private Long id;
 
     @Column(nullable = false, unique = true)
-    private String role;
+    private PositionName role;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
