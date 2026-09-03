@@ -71,7 +71,7 @@ public class ProductService {
                 .orElseThrow(() -> new ResourceNotFoundException("Product Not Found"));
 
         repository.delete(product);
-        log.info("Product with id: {}, deleted successfully", product.getProductId());
+        log.info("Product with id: {}, deleted successfully", product.getId());
     }
 
 }

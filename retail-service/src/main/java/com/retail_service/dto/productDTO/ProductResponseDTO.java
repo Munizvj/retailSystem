@@ -19,7 +19,7 @@ public class ProductResponseDTO {
     private Boolean active;
 
     public ProductResponseDTO(Product product) {
-        this.id = product.getProductId();
+        this.id = product.getId();
         this.name = product.getName();
         this.description = product.getDescription();
         this.price = product.getPrice();

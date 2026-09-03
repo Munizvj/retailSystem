@@ -42,10 +42,46 @@ public class StockService {
         return mapper.toDTO(savedStock);
     }
 
+    @Transactional(readOnly = true)
     public StockResponseDTO getStockByProductId(Long productId){
         Stock stock = stockRepository.findByProductId(productId)
                 .orElseThrow(() -> new EntityNotFoundException("The stock for the product don't exists"));
 
         return mapper.toDTO(stock);
+    }
+
+    @Transactional
+    public StockResponseDTO updateStock(Long productId, StockRequestDTO request){
+        Stock stock = stockRepository.findByProductId(productId)
+                .orElseThrow(() -> new EntityNotFoundException("The stock for the product doesn't exist"));
+
+        if (request.getQuantity() == null || request.getQuantity() < 0){
+            throw new IllegalArgumentException("Quantity cannot be null or negative");
+        }
+
+        stock.setQuantity(request.getQuantity());
+
+        Stock updatedStock = stockRepository.save(stock);
+        log.info("Stock updated successfully for product ID: {}. New Quantity: {}", productId, request.getQuantity());
+
+        return mapper.toDTO(updatedStock);
+    }
+
+    @Transactional
+    public StockResponseDTO adjustStockQuantity(Long productId, Integer quantity){
+        Stock stock = stockRepository.findByProductId(productId)
+                .orElseThrow(() -> new EntityNotFoundException("The stock for the product doesn't exist"));
+
+        int newQuantity = stock.getQuantity() + quantity;
+
+        if (newQuantity < 0){
+            throw new IllegalArgumentException("Insufficient stock available for this operation");
+        }
+
+        stock.setQuantity(newQuantity);
+        Stock updatedStock = stockRepository.save(stock);
+        log.info("Stock adjusted by {} for product ID: {}. New quantity: {}", quantity, productId, newQuantity);
+
+        return mapper.toDTO(updatedStock);
     }
 }
