@@ -5,7 +5,7 @@ INSERT INTO permissions (name) VALUES
 
 INSERT INTO position_permission (position_id, permission_id)
 SELECT 1, p.id FROM permissions p
-WHERE p.name IN ('GET_STOCK', 'UPDATE_STOCK', 'REGISTER_STOCK');
+WHERE p.name IN ('GET_STOCK', 'UPDATE_STOCK', 'CREATE_STOCK');
 
 INSERT INTO position_permission (position_id, permission_id)
 SELECT 2, p.id FROM permissions p
