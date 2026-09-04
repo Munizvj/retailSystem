@@ -1,5 +1,7 @@
 package com.retail_service.service;
 
+import com.retail_service.core.ProductDataService;
+import com.retail_service.core.StockDataService;
 import com.retail_service.dto.stockDTO.StockRequestDTO;
 import com.retail_service.dto.stockDTO.StockResponseDTO;
 import com.retail_service.mapper.StockMapper;
@@ -19,7 +21,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class StockService {
 
     private final StockRepository stockRepository;
-    private final ProductRepository productRepository;
+    private final StockDataService stockDataService;
+    private final ProductDataService productDataService;
     private final StockMapper mapper;
     private final static Logger log = LoggerFactory.getLogger(StockService.class);
 
@@ -29,8 +32,7 @@ public class StockService {
             throw new IllegalArgumentException("The stock for the product has already been added.");
         }
 
-        Product product = productRepository.findById(request.getProductId())
-                .orElseThrow(() -> new EntityNotFoundException("Product not found"));
+        Product product = productDataService.findProductById(request.getProductId());
 
         Stock stock = new Stock();
         stock.setProduct(product);
@@ -44,17 +46,13 @@ public class StockService {
 
     @Transactional(readOnly = true)
     public StockResponseDTO getStockByProductId(Long productId){
-        Stock stock = stockRepository.findByProductId(productId)
-                .orElseThrow(() -> new EntityNotFoundException("The stock for the product don't exists"));
-
+        Stock stock = stockDataService.findByProductId(productId);
         return mapper.toDTO(stock);
     }
 
     @Transactional
     public StockResponseDTO updateStock(Long productId, StockRequestDTO request){
-        Stock stock = stockRepository.findByProductId(productId)
-                .orElseThrow(() -> new EntityNotFoundException("The stock for the product doesn't exist"));
-
+        Stock stock = stockDataService.findByProductId(productId);
         if (request.getQuantity() == null || request.getQuantity() < 0){
             throw new IllegalArgumentException("Quantity cannot be null or negative");
         }
@@ -69,9 +67,7 @@ public class StockService {
 
     @Transactional
     public StockResponseDTO adjustStockQuantity(Long productId, Integer quantity){
-        Stock stock = stockRepository.findByProductId(productId)
-                .orElseThrow(() -> new EntityNotFoundException("The stock for the product doesn't exist"));
-
+        Stock stock = stockDataService.findByProductId(productId);
         int newQuantity = stock.getQuantity() + quantity;
 
         if (newQuantity < 0){
