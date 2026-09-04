@@ -1,6 +1,6 @@
 package com.retail_service.core;
 
-import com.retail_service.model.Product;
+import com.retail_service.domain.Product;
 import com.retail_service.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.apache.kafka.common.errors.ResourceNotFoundException;

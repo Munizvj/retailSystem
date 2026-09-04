@@ -1,6 +1,6 @@
 package com.retail_service.repository;
 
-import com.retail_service.model.Stock;
+import com.retail_service.domain.Stock;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

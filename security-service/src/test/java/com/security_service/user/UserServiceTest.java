@@ -4,7 +4,7 @@ import com.security_service.core.UserDataService;
 import com.security_service.dto.UserRequestDTO;
 import com.security_service.dto.UserResponseDTO;
 import com.security_service.mapper.UserMapper;
-import com.security_service.model.User;
+import com.security_service.domain.User;
 import com.security_service.repository.UserRepository;
 import com.security_service.security.SecurityService;
 import com.security_service.dto.UserLoginDTO;
@@ -17,8 +17,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;

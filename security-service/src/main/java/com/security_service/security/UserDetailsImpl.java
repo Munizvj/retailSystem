@@ -1,6 +1,6 @@
 package com.security_service.security;
 
-import com.security_service.model.User;
+import com.security_service.domain.User;
 import org.jspecify.annotations.Nullable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -8,7 +8,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 public class UserDetailsImpl implements UserDetails {

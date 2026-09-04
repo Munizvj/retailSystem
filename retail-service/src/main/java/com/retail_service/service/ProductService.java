@@ -4,7 +4,7 @@ import com.retail_service.core.ProductDataService;
 import com.retail_service.dto.productDTO.ProductRequestDTO;
 import com.retail_service.dto.productDTO.ProductResponseDTO;
 import com.retail_service.mapper.ProductMapper;
-import com.retail_service.model.Product;
+import com.retail_service.domain.Product;
 import com.retail_service.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;

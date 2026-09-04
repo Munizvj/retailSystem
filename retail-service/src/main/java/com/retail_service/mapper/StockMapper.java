@@ -2,7 +2,7 @@ package com.retail_service.mapper;
 
 import com.retail_service.dto.stockDTO.StockRequestDTO;
 import com.retail_service.dto.stockDTO.StockResponseDTO;
-import com.retail_service.model.Stock;
+import com.retail_service.domain.Stock;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;

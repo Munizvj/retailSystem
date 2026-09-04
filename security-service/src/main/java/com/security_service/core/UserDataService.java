@@ -1,7 +1,7 @@
 package com.security_service.core;
 
-import com.security_service.model.Position;
-import com.security_service.model.User;
+import com.security_service.domain.Position;
+import com.security_service.domain.User;
 import com.security_service.repository.PositionRepository;
 import com.security_service.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;

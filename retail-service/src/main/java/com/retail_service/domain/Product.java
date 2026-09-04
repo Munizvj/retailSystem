@@ -1,4 +1,4 @@
-package com.retail_service.model;
+package com.retail_service.domain;
 
 import jakarta.persistence.*;
 import lombok.*;

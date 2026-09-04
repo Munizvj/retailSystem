@@ -1,6 +1,6 @@
 package com.retail_service.core;
 
-import com.retail_service.model.Stock;
+import com.retail_service.domain.Stock;
 import com.retail_service.repository.StockRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;

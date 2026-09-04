@@ -1,6 +1,6 @@
 package com.retail_service.dto.productDTO;
 
-import com.retail_service.model.Product;
+import com.retail_service.domain.Product;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
