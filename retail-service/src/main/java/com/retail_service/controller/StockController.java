@@ -19,15 +19,15 @@ public class StockController {
 
     @PostMapping("/create")
     @PreAuthorize("hasAuthority('CREATE_STOCK')")
-    public ResponseEntity<StockResponseDTO> createStock(@RequestBody @Valid StockRequestDTO request){
-         StockResponseDTO response = service.createStock(request);
+    public ResponseEntity<StockResponseDTO> createStock(@RequestBody @Valid StockRequestDTO request) {
+        StockResponseDTO response = service.createStock(request);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @GetMapping("/product/{productId}")
     @PreAuthorize("hasAuthority('GET_STOCK')")
-    public ResponseEntity<StockResponseDTO> getStockByProductId(@PathVariable Long productId){
+    public ResponseEntity<StockResponseDTO> getStockByProductId(@PathVariable Long productId) {
         StockResponseDTO response = service.getStockByProductId(productId);
 
         return ResponseEntity.ok(response);
@@ -37,8 +37,7 @@ public class StockController {
     @PreAuthorize("hasAuthority('UPDATE_STOCK')")
     public ResponseEntity<StockResponseDTO> updateStock(
             @PathVariable Long productId,
-            @RequestBody @Valid StockRequestDTO request)
-    {
+            @RequestBody @Valid StockRequestDTO request) {
 
         StockResponseDTO response = service.updateStock(productId, request);
         return ResponseEntity.ok(response);

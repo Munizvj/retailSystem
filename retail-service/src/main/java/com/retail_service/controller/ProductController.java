@@ -29,7 +29,7 @@ public class ProductController {
 
     @GetMapping("/{id}")
     @PreAuthorize("hasAuthority('GET_PRODUCTS')")
-    public ResponseEntity<ProductResponseDTO> findProductById(@PathVariable Long id){
+    public ResponseEntity<ProductResponseDTO> findProductById(@PathVariable Long id) {
 
         ProductResponseDTO product = service.findProductById(id);
 
@@ -39,7 +39,7 @@ public class ProductController {
 
     @GetMapping("/search")
     @PreAuthorize("hasAuthority('GET_PRODUCTS')")
-    public ResponseEntity<ProductResponseDTO> findProductByName(@RequestParam String name){
+    public ResponseEntity<ProductResponseDTO> findProductByName(@RequestParam String name) {
 
         ProductResponseDTO product = service.findProductByName(name);
 
@@ -49,7 +49,7 @@ public class ProductController {
 
     @PostMapping("/register")
     @PreAuthorize("hasAuthority('REGISTER_PRODUCT')")
-    public ResponseEntity<ProductResponseDTO> registerProduct(@RequestBody ProductRequestDTO request){
+    public ResponseEntity<ProductResponseDTO> registerProduct(@RequestBody ProductRequestDTO request) {
 
         ProductResponseDTO response = service.registerProduct(request);
 
@@ -58,16 +58,16 @@ public class ProductController {
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAuthority('UPDATE_PRODUCT')")
-    public ResponseEntity<ProductResponseDTO> updateProduct(@PathVariable Long id, @RequestBody ProductRequestDTO request){
+    public ResponseEntity<ProductResponseDTO> updateProduct(@PathVariable Long id, @RequestBody ProductRequestDTO request) {
 
-        ProductResponseDTO response = service.updateProduct(id,request);
+        ProductResponseDTO response = service.updateProduct(id, request);
 
         return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('DELETE_PRODUCT')")
-    public ResponseEntity<Void> deleteProduct(@PathVariable Long id){
+    public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
         service.deleteProduct(id);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();

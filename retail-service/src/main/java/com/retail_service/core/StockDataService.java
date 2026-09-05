@@ -11,6 +11,9 @@ import org.springframework.stereotype.Service;
 public class StockDataService {
 
     private final StockRepository stockRepository;
+    public Stock save(Stock stock){
+        return stockRepository.save(stock);
+    }
 
     public Stock findByProductId(Long productId){
 
