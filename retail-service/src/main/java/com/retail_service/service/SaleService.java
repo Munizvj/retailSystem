@@ -1,8 +1,6 @@
 package com.retail_service.service;
 
 import com.retail_service.core.ProductDataService;
-import com.retail_service.dto.SaleRequestDTO;
-import com.retail_service.dto.SaleResponseDTO;
 import com.retail_service.mapper.SaleMapper;
 import com.retail_service.repository.SaleRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,5 +17,4 @@ public class SaleService {
     private final ProductDataService productDataService;
     private final StockService stockService;
 
-    public SaleResponseDTO createSale(SaleRequestDTO dto){}
 }

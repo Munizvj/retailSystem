@@ -24,9 +24,9 @@ public class Sale {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long Userid;
+    private Long userId;
 
-    private BigDecimal total;
+    private BigDecimal total = BigDecimal.ZERO;
 
     @Enumerated(EnumType.STRING)
     private PaymentMethod paymentMethod;
@@ -43,6 +43,37 @@ public class Sale {
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
-    private List<Product> saleList = new ArrayList<>();
+    private List<ItemSale> saleList = new ArrayList<>();
+
+    public static Sale create(Long userId, PaymentMethod paymentMethod) {
+        Sale sale = new Sale();
+        sale.setUserId(userId);
+        sale.setPaymentMethod(paymentMethod);
+        sale.setSaleStatus(SaleStatus.PENDING);
+        sale.setCreatedAt(LocalDateTime.now());
+        sale.setTotal(BigDecimal.ZERO);
+        return sale;
+    }
+
+    public void addItem(Product product, Integer quantity) {
+        ItemSale item = new ItemSale(this, product, quantity);
+        this.saleList.add(item);
+
+        if (item.getSubTotal() != null) {
+            this.total = this.total.add(item.getSubTotal());
+        }
+    }
+
+    public void finalizeSale() {
+        if (this.saleStatus != SaleStatus.PENDING) {
+            throw new IllegalArgumentException("Only Sales with pending status can be finished");
+        }
+        this.saleStatus = SaleStatus.FINISHED;
+        this.finalizeAt = LocalDateTime.now();
+    }
+
+    public void cancelSale() {
+        this.saleStatus = SaleStatus.CANCELLED;
+    }
 
 }

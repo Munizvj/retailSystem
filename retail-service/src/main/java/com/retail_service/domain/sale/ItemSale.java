@@ -2,11 +2,19 @@ package com.retail_service.domain.sale;
 
 import com.retail_service.domain.Product;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 
 @Entity
-@Table(name = "itemSales")
+@Table(name = "item_sales")
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class ItemSale {
 
     @Id
@@ -28,8 +36,12 @@ public class ItemSale {
 
     private BigDecimal subTotal;
 
-    public ItemSale(Sale sale, Product product, Integer quantity){
-        if (quantity == null || quantity <= 0){
+    public ItemSale(Sale sale, Product product, Integer quantity) {
+        if (product == null || product.getPrice() == null){
+            throw new IllegalArgumentException("Product and product price cannot be null");
+        }
+
+        if (quantity == null || quantity <= 0) {
             throw new IllegalArgumentException("The quantity must be greater than 0");
         }
 
