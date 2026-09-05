@@ -1,6 +1,8 @@
 package com.retail_service.service;
 
 import com.retail_service.core.ProductDataService;
+import com.retail_service.dto.SaleRequestDTO;
+import com.retail_service.dto.SaleResponseDTO;
 import com.retail_service.mapper.SaleMapper;
 import com.retail_service.repository.SaleRepository;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +15,9 @@ import org.springframework.stereotype.Service;
 public class SaleService {
 
     private final SaleRepository saleRepository;
+    private final SaleMapper mapper;
     private final ProductDataService productDataService;
-    private SaleMapper mapper;
+    private final StockService stockService;
 
+    public SaleResponseDTO createSale(SaleRequestDTO dto){}
 }
