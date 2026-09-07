@@ -55,7 +55,7 @@ class StockServiceTest {
 
     private Product createProduct(Long id) {
         Product p = new Product();
-        p.setProductId(id);
+        p.setId(id);
         return p;
     }
 
