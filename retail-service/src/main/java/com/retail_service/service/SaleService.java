@@ -6,6 +6,7 @@ import com.retail_service.core.StockDataService;
 import com.retail_service.domain.Product;
 import com.retail_service.domain.Stock;
 import com.retail_service.domain.sale.Sale;
+import com.retail_service.dto.ItemSaleRequestDTO;
 import com.retail_service.dto.SaleRequestDTO;
 import com.retail_service.dto.SaleResponseDTO;
 import com.retail_service.mapper.SaleMapper;
@@ -30,16 +31,20 @@ public class SaleService {
     public SaleResponseDTO createSale(SaleRequestDTO request) {
         Sale sale = Sale.create(request.getUserId(), request.getPaymentMethod());
 
-        request.getItems().forEach(itemRequest -> {
-            Product product = productDataService.findProductById(itemRequest.getProductId());
+        for (ItemSaleRequestDTO item : request.getItems()) {
 
-            sale.addItem(product, itemRequest.getQuantity());
-        });
+            Product product = productDataService.findProductById(item.getProductId());
+
+            sale.addItem(product, item.getQuantity());
+        }
 
         Sale savedSale = saleRepository.save(sale);
 
+        Sale completeSale = saleRepository.findByIdWithItemsAndProducts(savedSale.getId())
+                        .orElseThrow();
+
         log.info("Sale created successfully");
-        return mapper.toDTO(savedSale);
+        return mapper.toDTO(completeSale);
     }
 
     @Transactional
