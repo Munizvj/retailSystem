@@ -16,6 +16,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -26,6 +28,21 @@ public class SaleService {
     private final SaleMapper mapper;
     private final ProductDataService productDataService;
     private final StockDataService stockDataService;
+
+    @Transactional(readOnly = true)
+    public List<SaleResponseDTO> findAllSale(){
+        return saleRepository.findAllWithItemsAndProducts()
+                .stream()
+                .map(mapper::toDTO)
+                .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public SaleResponseDTO findSaleById(Long saleId){
+        Sale sale = saleDataService.findById(saleId);
+
+        return mapper.toDTO(sale);
+    }
 
     @Transactional
     public SaleResponseDTO createSale(SaleRequestDTO request) {

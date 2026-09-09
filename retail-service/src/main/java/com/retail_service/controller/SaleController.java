@@ -10,12 +10,26 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/sale")
 @RequiredArgsConstructor
 public class SaleController {
 
     private final SaleService service;
+
+    @GetMapping
+    @PreAuthorize("hasAuthority('GET_SALE')")
+    public ResponseEntity<List<SaleResponseDTO>> findAllSale(){
+        return ResponseEntity.ok(service.findAllSale());
+    }
+
+    @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('GET_SALE')")
+    public ResponseEntity<SaleResponseDTO> findSaleById(@PathVariable Long id){
+        return ResponseEntity.ok(service.findSaleById(id));
+    }
 
     @PostMapping("/create")
     @PreAuthorize("hasAuthority('CREATE_SALE')")
