@@ -1,4 +1,4 @@
-package com.security_service.model;
+package com.security_service.domain;
 
 import jakarta.persistence.*;
 import lombok.Getter;

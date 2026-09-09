@@ -1,4 +1,4 @@
-package com.retail_service.model;
+package com.retail_service.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -15,10 +15,14 @@ public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
+
+    @Column(nullable = false)
     private String name;
     private String description;
     private BigDecimal price;
     private Boolean active;
+    @OneToOne(mappedBy = "product", cascade = CascadeType.ALL)
+    private Stock stock;
 
 }

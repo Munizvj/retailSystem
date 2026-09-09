@@ -1,12 +1,14 @@
 package com.security_service.user;
 
+import com.security_service.core.UserDataService;
 import com.security_service.dto.UserRequestDTO;
 import com.security_service.dto.UserResponseDTO;
 import com.security_service.mapper.UserMapper;
-import com.security_service.model.User;
+import com.security_service.domain.User;
 import com.security_service.repository.UserRepository;
 import com.security_service.security.SecurityService;
 import com.security_service.dto.UserLoginDTO;
+import com.security_service.security.UserDetailsImpl;
 import com.security_service.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,8 +17,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -32,6 +32,8 @@ class UserServiceTest {
     @Mock
     private SecurityService securityService;
     @Mock
+    private UserDataService userDataService;
+    @Mock
     private PasswordEncoder passwordEncoder;
     @InjectMocks
     private UserService userService;
@@ -39,7 +41,7 @@ class UserServiceTest {
     //Test most legible i could do
 
     @Test
-    void shouldLoginSuccessfully(){
+    void shouldLoginSuccessfully() {
         UserLoginDTO loginDTO = new UserLoginDTO();
         loginDTO.setLogin("core");
         loginDTO.setPassword("123456");
@@ -49,38 +51,44 @@ class UserServiceTest {
         user.setPassword("encrypted-password");
 
 
-        when(repository.findByLogin("core")).thenReturn(Optional.of(user));
+        when(userDataService.findByLogin("core")).thenReturn(user);
 
         when(passwordEncoder.matches("123456", "encrypted-password"))
                 .thenReturn(true);
 
-        when(securityService.generateToken(user)).thenReturn("tokenJWT");
+        when(securityService.generateToken(eq(user), any(UserDetailsImpl.class))).thenReturn("tokenJWT");
 
         String result = userService.userLogin(loginDTO);
 
-        assertEquals("tokenJWT",result);
+        assertEquals("tokenJWT", result);
+
+        verify(userDataService).findByLogin("core");
+        verify(passwordEncoder)
+                .matches("123456", "encrypted-password");
+        verify(securityService)
+                .generateToken(eq(user), any(UserDetailsImpl.class));
     }
 
     @Test
-    void shouldThrowExceptionWhenUserDoesNotExist(){
+    void shouldThrowExceptionWhenUserDoesNotExist() {
         UserLoginDTO loginDTO = new UserLoginDTO();
         loginDTO.setLogin("core");
         loginDTO.setPassword("123456");
 
-        when(repository.findByLogin("core"))
-                .thenReturn(Optional.empty());
+        when(userDataService.findByLogin("core"))
+                .thenThrow(new BadCredentialsException("Login or Password invalid"));
 
         assertThrows(BadCredentialsException.class,
                 () -> userService.userLogin(loginDTO));
 
-        verify(repository).findByLogin("core");
+        verify(userDataService).findByLogin("core");
         verifyNoInteractions(passwordEncoder);
         verifyNoInteractions(securityService);
 
     }
 
     @Test
-    void shouldThrowExceptionWhenPasswordWrong(){
+    void shouldThrowExceptionWhenPasswordWrong() {
         UserLoginDTO loginDTO = new UserLoginDTO();
         loginDTO.setLogin("core");
         loginDTO.setPassword("123456");
@@ -89,20 +97,20 @@ class UserServiceTest {
         user.setLogin("core");
         user.setPassword("encrypted-password");
 
-        when(repository.findByLogin("core")).thenReturn(Optional.of(user));
+        when(userDataService.findByLogin("core")).thenReturn(user);
 
         when(passwordEncoder.matches("123456", "encrypted-password"))
                 .thenReturn(false);
 
         assertThrows(BadCredentialsException.class
-        ,() -> userService.userLogin(loginDTO));
+                , () -> userService.userLogin(loginDTO));
 
-        verify(repository).findByLogin("core");
+        verify(  userDataService).findByLogin("core");
         verify(passwordEncoder).matches("123456", "encrypted-password");
     }
 
     @Test
-    void shouldRegisterSuccessfully(){
+    void shouldRegisterSuccessfully() {
         UserRequestDTO request = new UserRequestDTO();
         request.setLogin("core");
         request.setPassword("123456");
@@ -121,7 +129,7 @@ class UserServiceTest {
     }
 
     @Test
-    void shouldUpdateSuccessfully(){
+    void shouldUpdateSuccessfully() {
         Long userId = 1L;
         UserRequestDTO request = new UserRequestDTO();
         request.setLogin("core");
@@ -132,7 +140,7 @@ class UserServiceTest {
         expectedResponse.setLogin("romeu");
         expectedResponse.setId(userId);
 
-        when(repository.findById(userId)).thenReturn(Optional.of(user));
+        when(userDataService.findUserById(userId)).thenReturn(user);
         when(passwordEncoder.encode("123456")).thenReturn("encrypted-password");
         when(repository.save(any(User.class))).thenReturn(user);
         when(mapper.toDTO(user)).thenReturn(expectedResponse);
@@ -143,11 +151,11 @@ class UserServiceTest {
     }
 
     @Test
-    void shouldDeleteSuccessfully(){
+    void shouldDeleteSuccessfully() {
         Long id = 1L;
         User user = new User();
 
-        when(repository.findById(id)).thenReturn(Optional.of(user));
+        when(userDataService.findUserById(id)).thenReturn(user);
         userService.deleteUser(id);
 
         verify(repository).delete(user);

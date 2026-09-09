@@ -1,4 +1,4 @@
-package com.retail_service.dto;
+package com.retail_service.dto.productDTO;
 
 import lombok.Data;
 

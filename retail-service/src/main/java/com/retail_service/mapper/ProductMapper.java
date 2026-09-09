@@ -1,8 +1,8 @@
 package com.retail_service.mapper;
 
-import com.retail_service.dto.ProductRequestDTO;
-import com.retail_service.dto.ProductResponseDTO;
-import com.retail_service.model.Product;
+import com.retail_service.dto.productDTO.ProductRequestDTO;
+import com.retail_service.dto.productDTO.ProductResponseDTO;
+import com.retail_service.domain.Product;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
 
