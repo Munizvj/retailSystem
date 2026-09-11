@@ -9,6 +9,9 @@ import com.retail_service.domain.sale.Sale;
 import com.retail_service.dto.ItemSaleRequestDTO;
 import com.retail_service.dto.SaleRequestDTO;
 import com.retail_service.dto.SaleResponseDTO;
+import com.retail_service.event.SaleCancelledEvent;
+import com.retail_service.event.SaleCreatedEvent;
+import com.retail_service.event.SaleEventProducer;
 import com.retail_service.mapper.SaleMapper;
 import com.retail_service.repository.SaleRepository;
 import lombok.RequiredArgsConstructor;
@@ -28,9 +31,10 @@ public class SaleService {
     private final SaleMapper mapper;
     private final ProductDataService productDataService;
     private final StockDataService stockDataService;
+    private final SaleEventProducer saleEventProducer;
 
     @Transactional(readOnly = true)
-    public List<SaleResponseDTO> findAllSale(){
+    public List<SaleResponseDTO> findAllSale() {
         return saleRepository.findAllWithItemsAndProducts()
                 .stream()
                 .map(mapper::toDTO)
@@ -38,7 +42,7 @@ public class SaleService {
     }
 
     @Transactional(readOnly = true)
-    public SaleResponseDTO findSaleById(Long saleId){
+    public SaleResponseDTO findSaleById(Long saleId) {
         Sale sale = saleDataService.findById(saleId);
 
         return mapper.toDTO(sale);
@@ -58,7 +62,7 @@ public class SaleService {
         Sale savedSale = saleRepository.save(sale);
 
         Sale completeSale = saleRepository.findByIdWithItemsAndProducts(savedSale.getId())
-                        .orElseThrow();
+                .orElseThrow();
 
         log.info("Sale created successfully");
         return mapper.toDTO(completeSale);
@@ -81,6 +85,22 @@ public class SaleService {
             stockDataService.save(stock);
         });
 
+            SaleCreatedEvent event = new SaleCreatedEvent(
+                    sale.getId(),
+
+                    sale.getUserId(),
+
+                    sale.getTotal(),
+
+                    sale.getPaymentMethod(),
+
+                    sale.getSaleStatus(),
+
+                    sale.getFinalizeAt()
+            );
+
+            saleEventProducer.sendSaleCreatedEvent(event);
+
         Sale updatedSale = saleRepository.save(sale);
         log.info("Sale ID {} finalized successfully", saleId);
         return mapper.toDTO(updatedSale);
@@ -102,6 +122,12 @@ public class SaleService {
 
         sale.cancelSale();
         Sale updatedSale = saleRepository.save(sale);
+
+        SaleCancelledEvent event = new SaleCancelledEvent(
+                updatedSale.getId(),
+                updatedSale.getUserId(),
+                updatedSale.getSaleStatus()
+        );
 
         log.info("Sale ID {} cancelled successfully", saleId);
         return mapper.toDTO(updatedSale);
